@@ -1,0 +1,42 @@
+from netmiko import ConnectHandler
+import getpass
+
+username = input("username: ")
+password = getpass.getpass("password: ")
+secret = getpass.getpass("cisco")
+ip = input("IP-address: ")  
+
+cisco20 = {
+    "device_type": "cisco_ios",
+    "ip": ip,  
+    "username": username,
+    "password": password,
+    "secret": secret,
+}
+
+net_connect = ConnectHandler(**cisco20)
+net_connect.enable()
+output = net_connect.send_command("show ip interface brief")
+print(output)
+
+new_ip_addresses = {
+    "Loopback2072": "IP-address",
+    "Loopback2073": "IP-address",
+    "Loopback2074": "IP-address",
+    "Loopback3071": "IP-address",
+    "Loopback3072": "IP-address",
+    
+}
+
+config_commands = []  
+
+for intf, new_ip in new_ip_addresses.items():
+    config_commands.append(f"interface {intf}")
+    config_commands.append(f"ip address {new_ip} 255.255.255.255")
+    config_commands.append("exit")
+
+net_connect.send_config_set(config_commands)
+
+updated_output = net_connect.send_command("show ip interface brief")
+print(updated_output)
+
