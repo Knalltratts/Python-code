@@ -8,7 +8,7 @@ ip = input("IP-address: ")
 
 cisco20 = {
     "device_type": "cisco_ios",
-    "ip": ip,  
+    "ip": ip-address,  
     "username": username,
     "password": password,
     "secret": secret,
